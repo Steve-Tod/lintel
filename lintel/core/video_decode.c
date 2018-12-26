@@ -242,10 +242,11 @@ decode_video_to_out_buffer(uint8_t *dest,
         const uint32_t bytes_per_row = 3*frame_rgb->width;
         const uint32_t bytes_per_frame = bytes_per_row*frame_rgb->height;
         uint32_t copied_bytes = 0;
+        int32_t status = VID_DECODE_SUCCESS;
         for (int32_t frame_number = 0;
              frame_number < num_requested_frames;
              ++frame_number) {
-                int32_t status = receive_frame(vid_ctx);
+                status = receive_frame(vid_ctx);
                 if (status == VID_DECODE_EOF) {
                         loop_to_buffer_end(dest,
                                            copied_bytes,
@@ -269,7 +270,7 @@ decode_video_to_out_buffer(uint8_t *dest,
         av_frame_free(&frame_rgb);
 
         sws_freeContext(sws_context);
-        return status
+        return status;
 }
 
 int32_t read_memory(void *opaque, uint8_t *buffer, int32_t buf_size_bytes)

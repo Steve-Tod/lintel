@@ -27,8 +27,8 @@ lintel_module = distutils.core.Extension(
              'lintel/core/video_decode.c'])
 
 
-setuptools.setup(author='Brendan Duke',
-                 author_email='brendanw.duke@gmail.com',
+setuptools.setup(author='Jiarui Xu',
+                 author_email='xvjiarui0826@gmail.com',
                  name='Lintel',
                  description='Video decoding package.',
                  long_description="""
@@ -43,5 +43,5 @@ setuptools.setup(author='Brendan Duke',
                  ext_modules=[lintel_module],
                  packages=setuptools.find_packages(),
                  py_modules=['lintel.test.loadvid_test'],
-                 url='https://brendanduke.ca',
+                 url='https://jerryxu.net',
                  version='1.0')

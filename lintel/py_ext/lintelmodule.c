@@ -378,7 +378,7 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
 
         if (!PyArg_ParseTupleAndKeywords(args,
                                          kw,
-                                         "y#|$pIII:loadvid",
+                                         "y#|$ppIII:loadvid",
                                          kwlist,
                                          &video_bytes,
                                          &in_size_bytes,
@@ -439,7 +439,8 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
                                                            &vid_ctx,
                                                            num_frames);
         if (decoded_status == VID_DECODE_EOF && !should_fill_less) {
-            Py_CLEAR(frames)
+            Py_CLEAR(frames);
+            frames = alloc_pyarray(num_frames*width*height*3);
             seek_distance = 0;
             timestamp = seek_to_closest_keypoint(&seek_distance,
                                                  &vid_ctx,
