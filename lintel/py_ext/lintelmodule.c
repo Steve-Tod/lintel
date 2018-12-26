@@ -440,7 +440,7 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
                                                            num_frames);
         if (decoded_status == VID_DECODE_EOF && !should_fill_less) {
             Py_CLEAR(frames)
-            seek_distance = 0
+            seek_distance = 0;
             timestamp = seek_to_closest_keypoint(&seek_distance,
                                                  &vid_ctx,
                                                  false,
