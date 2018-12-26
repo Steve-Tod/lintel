@@ -218,7 +218,7 @@ loop_to_buffer_end(uint8_t *dest,
         }
 }
 
-void
+int32_t
 decode_video_to_out_buffer(uint8_t *dest,
                            struct video_stream_context *vid_ctx,
                            int32_t num_requested_frames)
@@ -269,6 +269,7 @@ decode_video_to_out_buffer(uint8_t *dest,
         av_frame_free(&frame_rgb);
 
         sws_freeContext(sws_context);
+        return status
 }
 
 int32_t read_memory(void *opaque, uint8_t *buffer, int32_t buf_size_bytes)

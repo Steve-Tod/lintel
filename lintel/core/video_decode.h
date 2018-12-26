@@ -174,7 +174,7 @@ skip_past_timestamp(struct video_stream_context *vid_ctx, int64_t timestamp);
  * @param vid_ctx Context needed to decode frames from the video stream.
  * @param num_requested_frames Number of frames requested to fill into `dest`.
  */
-void
+int32_t
 decode_video_to_out_buffer(uint8_t *dest,
                            struct video_stream_context *vid_ctx,
                            int32_t num_requested_frames);

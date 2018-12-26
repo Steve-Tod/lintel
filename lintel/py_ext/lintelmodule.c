@@ -363,12 +363,14 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
         const char *video_bytes = NULL;
         Py_ssize_t in_size_bytes = 0;
         bool should_random_seek = true;
+        bool should_fill_less = false;
         uint32_t width = 0;
         uint32_t height = 0;
         uint32_t num_frames = 32;
         float seek_distance = 0.0f;
         static char *kwlist[] = {"encoded_video",
                                  "should_random_seek",
+                                 "should_fill_less",
                                  "width",
                                  "height",
                                  "num_frames",
@@ -381,6 +383,7 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
                                          &video_bytes,
                                          &in_size_bytes,
                                          &should_random_seek,
+                                         &should_fill_less,
                                          &width,
                                          &height,
                                          &num_frames))
@@ -432,9 +435,26 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
         if (status != VID_DECODE_SUCCESS)
                 goto clean_up_av_frame;
 
-        decode_video_to_out_buffer((uint8_t *)(frames->ob_bytes),
-                                   &vid_ctx,
-                                   num_frames);
+        int32_t decoded_status = decode_video_to_out_buffer((uint8_t *)(frames->ob_bytes),
+                                                           &vid_ctx,
+                                                           num_frames);
+        if (decoded_status == VID_DECODE_EOF && !should_fill_less) {
+            Py_CLEAR(frames)
+            seek_distance = 0
+            timestamp = seek_to_closest_keypoint(&seek_distance,
+                                                 &vid_ctx,
+                                                 false,
+                                                 num_frames);
+            result = (PyObject *)frames;
+
+            status = skip_past_timestamp(&vid_ctx, timestamp);
+            if (status != VID_DECODE_SUCCESS)
+                    goto clean_up_av_frame;
+
+            decode_video_to_out_buffer((uint8_t *)(frames->ob_bytes),
+                                                   &vid_ctx,
+                                                   num_frames);
+        }
 
 clean_up_av_frame:
         clean_up_vid_ctx(&vid_ctx);
@@ -494,7 +514,7 @@ PyInit__lintel(void)
 {
         av_register_all();
         av_log_set_level(AV_LOG_ERROR);
-        srand(time(NULL));
+        srand(3);
 
         return PyModuleDef_Init(&lintelmodule);
 }
