@@ -438,9 +438,25 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
         int32_t decoded_status = decode_video_to_out_buffer((uint8_t *)(frames->ob_bytes),
                                                            &vid_ctx,
                                                            num_frames);
+         // modified by Jiarui
         if (decoded_status == VID_DECODE_EOF && !should_fill_less) {
+            // clean up
             Py_CLEAR(frames);
+            clean_up_vid_ctx(&vid_ctx);
+            int32_t reload_status = setup_vid_stream_context(&vid_ctx, &input_buf);
+            if (reload_status != LOADVID_SUCCESS) {
+                    /**
+                     * NOTE(brendan): In case there was a stream index error,
+                     * return a garbage buffer.
+                     */
+                    if (status == LOADVID_ERR_STREAM_INDEX)
+                              goto return_frames;
+
+                    return NULL;
+            }
             frames = alloc_pyarray(num_frames*width*height*3);
+            if (PyErr_Occurred() || (frames == NULL))
+                    return (PyObject *)frames;
             seek_distance = 0;
             timestamp = seek_to_closest_keypoint(&seek_distance,
                                                  &vid_ctx,
