@@ -366,7 +366,7 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
         bool should_fill_less = false;
         uint32_t width = 0;
         uint32_t height = 0;
-        uint32_t num_frames = 32;
+        uint32_t num_frames = 0;
         float seek_distance = 0.0f;
         static char *kwlist[] = {"encoded_video",
                                  "should_random_seek",
@@ -398,6 +398,11 @@ loadvid(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
         bool is_size_dynamic = get_vid_width_height(&width,
                                                     &height,
                                                     vid_ctx.codec_context);
+
+        if (num_frames == 0) {
+            num_frames = vid_ctx.nb_frames;
+            should_random_seek = false;
+        }
 
         PyByteArrayObject *frames = alloc_pyarray(num_frames*width*height*3);
         if (PyErr_Occurred() || (frames == NULL))
