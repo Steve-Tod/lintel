@@ -235,7 +235,7 @@ get_vid_width_height(uint32_t *width,
                      AVCodecContext *codec_context)
 {
         /* NOTE(brendan): If no size is passed, dynamically find size. */
-        fprintf(stderr, "get vid width and height.\n");
+//        fprintf(stderr, "get vid width and height.\n");
         bool is_size_dynamic = (*width == 0) && (*height == 0);
         if (is_size_dynamic) {
                 *width = codec_context->width;
