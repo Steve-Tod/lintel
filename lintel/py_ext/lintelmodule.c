@@ -80,6 +80,7 @@ static int32_t
 setup_vid_stream_context(struct video_stream_context *vid_ctx,
                          struct buffer_data *input_buf)
 {
+//        fprintf(stderr, "Setting up vid stream context.\n");
         const uint32_t buffer_size = 32*1024;
         uint8_t *avio_ctx_buffer = av_malloc(buffer_size);
         if (avio_ctx_buffer == NULL)
@@ -147,6 +148,7 @@ setup_vid_stream_context(struct video_stream_context *vid_ctx,
                  * Compute nb_frames from fmt ctx duration (microseconds) and
                  * stream FPS (frames/second).
                  */
+//                fprintf(stderr, "nb frames less than 0.\n");
                 assert(video_stream->avg_frame_rate.den > 0);
 
                 enum AVRounding rnd = (enum AVRounding)(AV_ROUND_DOWN |
@@ -233,6 +235,7 @@ get_vid_width_height(uint32_t *width,
                      AVCodecContext *codec_context)
 {
         /* NOTE(brendan): If no size is passed, dynamically find size. */
+        fprintf(stderr, "get vid width and height.\n");
         bool is_size_dynamic = (*width == 0) && (*height == 0);
         if (is_size_dynamic) {
                 *width = codec_context->width;
