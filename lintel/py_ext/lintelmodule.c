@@ -506,25 +506,30 @@ return_frames:
 static PyObject *
 manual_seed(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
 {
-        static char *kwlist[] = {"seed",
+        static char *kwlist[] = {
                                  "use_time",
+                                 "seed",
                                  0};
 
-        uint32_t rng_seed = 0;
         bool use_time = false;
+        uint32_t rng_seed = 0;
+//        fprintf(stderr, "lintel declare rng seed %d\n", rng_seed);
         if (!PyArg_ParseTupleAndKeywords(args,
                                          kw,
-                                         "|I$p:manual_seed",
+                                         "pI:manual_seed",
                                          kwlist,
-                                         &rng_seed,
-                                         &use_time))
+                                         &use_time,
+                                         &rng_seed
+                                         ))
                 return NULL;
         if (use_time) {
-            rng_seed = time(NULL);
-            fprintf(stderr, "lintel setting rng seed use time to %d", rng_seed);
+//            fprintf(stderr, "lintel setting rng seed use time to origin %d\n", rng_seed);
+            uint32_t old_rng_seed = rng_seed;
+            rng_seed = rng_seed + time(NULL);
+            fprintf(stderr, "lintel setting rng seed use time to %d instead of %d\n", rng_seed, old_rng_seed);
         }
         else {
-            fprintf(stderr, "lintel setting rng seed to %d", rng_seed);
+            fprintf(stderr, "lintel setting rng seed to %d\n", rng_seed);
         }
         srand(rng_seed);
         return Py_BuildValue("s", NULL);
