@@ -539,7 +539,8 @@ PyInit__lintel(void)
 {
         av_register_all();
         av_log_set_level(AV_LOG_ERROR);
-        srand(3);
+//        srand(3);
+        srand(time(NULL));
 
         return PyModuleDef_Init(&lintelmodule);
 }
