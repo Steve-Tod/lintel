@@ -18,3 +18,4 @@ import _lintel
 
 loadvid = _lintel.loadvid
 loadvid_frame_nums = _lintel.loadvid_frame_nums
+manual_seed = _lintel.manual_seed

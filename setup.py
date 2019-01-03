@@ -44,4 +44,4 @@ setuptools.setup(author='Jiarui Xu',
                  packages=setuptools.find_packages(),
                  py_modules=['lintel.test.loadvid_test'],
                  url='https://jerryxu.net',
-                 version='1.0')
+                 version='1.0a')

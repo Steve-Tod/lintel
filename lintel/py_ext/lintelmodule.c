@@ -503,6 +503,24 @@ return_frames:
         return result;
 }
 
+static PyObject *
+manual_seed(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
+{
+        static char *kwlist[] = {"seed",
+                                 0};
+
+        uint32_t rng_seed = 0;
+        if (!PyArg_ParseTupleAndKeywords(args,
+                                         kw,
+                                         "I:manual_seed",
+                                         kwlist,
+                                         &rng_seed))
+                return NULL;
+        fprintf(stderr, "lintel setting rng seed to %d", rng_seed);
+        srand(rng_seed);
+        return Py_BuildValue("s", NULL);
+}
+
 static PyMethodDef lintel_methods[] = {
         {"loadvid",
          (PyCFunction)loadvid,
@@ -518,6 +536,11 @@ static PyMethodDef lintel_methods[] = {
                    "decoded video ByteArray object or\n"
                    "tuple(decoded video ByteArray object, width, height)\n"
                    "if width and height are not passed as arguments.")},
+        {"manual_seed",
+         (PyCFunction)manual_seed,
+         METH_VARARGS | METH_KEYWORDS,
+         PyDoc_STR("manual seed the random generator for seek"
+                   )},
         {NULL, NULL, 0, NULL}
 };
 
