@@ -526,11 +526,11 @@ manual_seed(PyObject *UNUSED(dummy), PyObject *args, PyObject *kw)
 //            fprintf(stderr, "lintel setting rng seed use time to origin %d\n", rng_seed);
             uint32_t old_rng_seed = rng_seed;
             rng_seed = rng_seed + time(NULL);
-            fprintf(stderr, "lintel setting rng seed use time to %d instead of %d\n", rng_seed, old_rng_seed);
+//            fprintf(stderr, "lintel setting rng seed use time to %d instead of %d\n", rng_seed, old_rng_seed);
         }
-        else {
-            fprintf(stderr, "lintel setting rng seed to %d\n", rng_seed);
-        }
+//        else {
+//            fprintf(stderr, "lintel setting rng seed to %d\n", rng_seed);
+//        }
         srand(rng_seed);
         return Py_BuildValue("s", NULL);
 }
